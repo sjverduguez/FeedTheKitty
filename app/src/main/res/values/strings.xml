@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Feed The Kitty</string>
+    <string name="app_logo"></string>
+    <string name="login_button">Login</string>
+    <string name="forgotPassword">Forgot password?</string>
+    <string name="paypal_signup"> Sign up with Paypal</string>
+    <string name="or">Not Registered?</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="create_event">Create Event</string>
+    <string name="hint_location">Event Location</string>
+    <string name="hint_eventTitle">Event Title</string>
+    <string name="hint_eventFund">Event Fund Goal</string>
+    <string name="hint_beginDate">Begin Date</string>
+    <string name="hint_endDate">End Date</string>
+    <string name="hint_beginTime">Begin Time</string>
+    <string name="hint_endTime">End Time</string>
+    <string name="hint_eventInfo">Event Info</string>
+    <string name="beginDate_logo"></string>
+    <string name="endDate_logo"></string>
+    <string name="title_activity_add_invitee">AddInviteeActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="total_col">Total Collected:</string>
+
+
+</resources>
