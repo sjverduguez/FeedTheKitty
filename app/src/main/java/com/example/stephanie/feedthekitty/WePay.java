@@ -59,7 +59,7 @@ public class WePay {
                     Log.i(TAG, "Token Type: " + responseJSON.getString("token_type"));
 
                     sendConfirmation(context, responseJSON.getString("access_token"));
-                    createAccount(context, "New Event", "Description about event", responseJSON.getString("access_token"));
+                    createAccount(context, "New Event", "Description about event", null, responseJSON.getString("access_token"));
                 } catch (JSONException e) {
 
                 }
@@ -135,7 +135,7 @@ public class WePay {
     // accountName is the name of the new event that the user is creating
     // Account Desciption is the description of the event if any
     // TODO: Decide if we want 1 account per user or per fundraiser
-    public static void createAccount (Context context, final String accountName, final String accountDescription, final String accessToken){
+    public static void createAccount (Context context, final String accountName, final String accountDescription, final String imageURI, final String accessToken){
         RequestQueue queue = Volley.newRequestQueue(context);
         StringRequest sr = new StringRequest(Request.Method.POST, createAccountURI, new Response.Listener<String>() {
 
@@ -161,6 +161,7 @@ public class WePay {
                 Map<String,String> params = new HashMap<String, String>();
                 params.put("name", accountName);
                 params.put("description", accountDescription);
+                params.put("image_uri", imageURI);
                 return params;
             }
 
