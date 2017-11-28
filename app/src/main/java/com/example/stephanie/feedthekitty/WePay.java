@@ -98,6 +98,7 @@ public class WePay {
     }
 
     // User gets an email to finish setting up the account we made them
+    // Access token was generated in when registering user
     public static void sendConfirmation (Context context, final String accessToken){
         RequestQueue queue = Volley.newRequestQueue(context);
         StringRequest sr = new StringRequest(Request.Method.POST, userSendConfirmationURI, new Response.Listener<String>() {
@@ -130,6 +131,7 @@ public class WePay {
     }
 
     // Create an account for the user.
+    // Access token was generated in when registering user
     // TODO: Decide if we want 1 account per user or per fundraiser
     public static void createAccount (Context context, final String accessToken){
         RequestQueue queue = Volley.newRequestQueue(context);
@@ -145,7 +147,6 @@ public class WePay {
                 } catch (JSONException e) {
 
                 }
-
             }
         }, new Response.ErrorListener() {
             @Override
@@ -172,8 +173,11 @@ public class WePay {
         queue.add(sr);
     }
 
-    // Account ID is the person being paid, accessToken is for the person paying
-    public static void checkout (Context context, final int accountID, final String eventName, final float amount, final String accessToken){
+    // Account ID is the person being paid
+    // accessToken is for the person paying
+    // description is a description of the payment. It will include the name of the person making the payment so they can be given credit
+    // amount is the amount of the payment in dollars
+    public static void checkout (Context context, final int accountID, final String description, final float amount, final String accessToken){
         RequestQueue queue = Volley.newRequestQueue(context);
         StringRequest sr = new StringRequest(Request.Method.POST, checkoutURI, new Response.Listener<String>() {
 
@@ -201,7 +205,7 @@ public class WePay {
             protected Map<String, String> getParams() {
                 Map<String,String> params = new HashMap<String, String>();
                 params.put("account_id", Integer.toString(accountID));
-                params.put("short_description", eventName);
+                params.put("short_description", description);
                 params.put("type", "personal");
                 params.put("amount", Float.toString(amount));
                 params.put("currency", "USD");
