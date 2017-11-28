@@ -59,7 +59,7 @@ public class WePay {
                     Log.i(TAG, "Token Type: " + responseJSON.getString("token_type"));
 
                     sendConfirmation(context, responseJSON.getString("access_token"));
-                    createAccount(context, responseJSON.getString("access_token"));
+                    createAccount(context, "New Event", "Description about event", responseJSON.getString("access_token"));
                 } catch (JSONException e) {
 
                 }
@@ -132,8 +132,10 @@ public class WePay {
 
     // Create an account for the user.
     // Access token was generated in when registering user
+    // accountName is the name of the new event that the user is creating
+    // Account Desciption is the description of the event if any
     // TODO: Decide if we want 1 account per user or per fundraiser
-    public static void createAccount (Context context, final String accessToken){
+    public static void createAccount (Context context, final String accountName, final String accountDescription, final String accessToken){
         RequestQueue queue = Volley.newRequestQueue(context);
         StringRequest sr = new StringRequest(Request.Method.POST, createAccountURI, new Response.Listener<String>() {
 
@@ -157,8 +159,8 @@ public class WePay {
             @Override
             protected Map<String, String> getParams() {
                 Map<String,String> params = new HashMap<String, String>();
-                params.put("name", "Feed The Kitty");
-                params.put("description", "For making payments to your friends and stuff");
+                params.put("name", accountName);
+                params.put("description", accountDescription);
                 return params;
             }
 
@@ -189,6 +191,7 @@ public class WePay {
                     //TODO create an intent to fulfill the checkout uri. The checkout uri takes care of the user paying
                     // We will need a way later on to track how much has been paid to events
                     String checkoutURI = responseJSON.getJSONObject("hosted_checkout").getString("checkout_uri");
+
                     Log.i(TAG, checkoutURI);
                 } catch (JSONException e) {
 
