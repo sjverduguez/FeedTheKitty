@@ -47,7 +47,7 @@ public class WePay {
         RequestQueue queue = Volley.newRequestQueue(context);
         StringRequest sr = new StringRequest(Request.Method.POST, userURI, new Response.Listener<String>() {
 
-            // TODO: Store the user id, access token, and access type in our database or locally on the users device
+            // TODO: Store the user id and access token on the users device
             // NOTE: Repeating this function with the same email address will give the same result
             @Override
             public void onResponse(String response) {
@@ -57,7 +57,6 @@ public class WePay {
 
                     Log.i(TAG, "User ID: " + responseJSON.getString("user_id"));
                     Log.i(TAG, "Access Token: " + responseJSON.getString("access_token"));
-                    Log.i(TAG, "Token Type: " + responseJSON.getString("token_type"));
 
                     // Send email to a user to confirm the creation of their account
                     sendConfirmation(context, responseJSON.getString("access_token"));
@@ -190,9 +189,8 @@ public class WePay {
             public void onResponse(String response) {
                 try {
                     JSONObject responseJSON = new JSONObject(response);
-                    //TODO create an intent to fulfill the checkout uri. The checkout uri takes care of the user paying
-                    // TODO add a this checkout to the firebase as a pending payment for this account, including storing
-                    // the name of the person paying and the amount being paid
+                    // TODO create an intent to fulfill the checkout uri. The checkout uri takes care of the user paying
+                    // TODO add a this checkout to the locally stored list of pending payments for this user
                     String hostedCheckoutURI = responseJSON.getJSONObject("hosted_checkout").getString("checkout_uri");
 
                     Log.i(TAG, hostedCheckoutURI);
@@ -234,22 +232,19 @@ public class WePay {
         RequestQueue queue = Volley.newRequestQueue(context);
         StringRequest sr = new StringRequest(Request.Method.POST, checkoutStatusURI, new Response.Listener<String>() {
 
-            // TODO: Store the account_id in our database or locally on the users device
             @Override
             public void onResponse(String response) {
                 try {
                     JSONObject responseJSON = new JSONObject(response);
-
+                    String accountId = responseJSON.getString("account_id");
                     String state = responseJSON.getString("state");
                     String payer = responseJSON.getString("short_description");
                     Double amount = responseJSON.getDouble("amount");
 
-                    Log.i(TAG, "Status: " + state);
-                    Log.i(TAG, "Payer: " + payer);
-                    Log.i(TAG, "Amount: " + amount);
+                    Log.i(TAG, "State of checkout " + checkoutID + " of amount " + amount + " from " + payer + " to account " + accountId + ": " + state);
 
-                    // TODO: If the state of the payment is authorized, captured, or released, then set the payment status to complete in the firebase
-                    // If the payment status is anything else except "new" delete the payment, as the user cancelled it for some reason
+                    // TODO: If the state of the payment is authorized, captured, or released, then add the payment to the account in the firebase
+                    // If the state of the payment is still new, do nothing. If it is anything else, you can delete it from the pending payments
                     // For reference: https://developer.wepay.com/api/api-calls/checkout#states
 
                 } catch (JSONException e) {
