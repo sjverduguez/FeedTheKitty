@@ -36,6 +36,7 @@ public class WePay {
     private static String createAccountURI = "https://stage.wepayapi.com/v2/account/create";
     private static String checkoutURI = "https://stage.wepayapi.com/v2/checkout/create";
     private static String userSendConfirmationURI = "https://stage.wepayapi.com/v2/user/send_confirmation";
+    private static String checkoutStatusURI = "https://stage.wepayapi.com/v2/checkout";
 
     //  ClientID and Client Secret belong to the master account, which is only used for creating new users
     static int clientID = 197615;
@@ -58,8 +59,8 @@ public class WePay {
                     Log.i(TAG, "Access Token: " + responseJSON.getString("access_token"));
                     Log.i(TAG, "Token Type: " + responseJSON.getString("token_type"));
 
+                    // Send email to a user to confirm the creation of their account
                     sendConfirmation(context, responseJSON.getString("access_token"));
-                    createAccount(context, "New Event", "Description about event", null, responseJSON.getString("access_token"));
                 } catch (JSONException e) {
 
                 }
@@ -134,12 +135,14 @@ public class WePay {
     // Access token was generated in when registering user
     // accountName is the name of the new event that the user is creating
     // Account Desciption is the description of the event if any
-    // TODO: Decide if we want 1 account per user or per fundraiser
-    public static void createAccount (Context context, final String accountName, final String accountDescription, final String imageURI, final String accessToken){
+    // The time is the time of the event stored as the epoch time
+    // TODO: The account will be added to the firebase along with a description of the event
+    public static void createAccount (Context context, final String accountName, final String accountDescription, final long time, final String imageURI, final String accessToken){
         RequestQueue queue = Volley.newRequestQueue(context);
         StringRequest sr = new StringRequest(Request.Method.POST, createAccountURI, new Response.Listener<String>() {
 
-            // TODO: Store the account_id in our database or locally on the users device
+            // TODO: Store the account_id on users device as a list of my events
+            // TODO: Sore the account_id along with accessToken, description, time, name, and image in our firebase so other users can get information about this event
             // account_ids are associated with users so they know where to make payments
             @Override
             public void onResponse(String response) {
@@ -161,7 +164,6 @@ public class WePay {
                 Map<String,String> params = new HashMap<String, String>();
                 params.put("name", accountName);
                 params.put("description", accountDescription);
-                params.put("image_uri", imageURI);
                 return params;
             }
 
@@ -178,22 +180,22 @@ public class WePay {
 
     // Account ID is the person being paid
     // accessToken is for the person paying
-    // description is a description of the payment. It will include the name of the person making the payment so they can be given credit
+    // payer is a description of the payment. It will be the name of the person making the payment so they can be given credit
     // amount is the amount of the payment in dollars
-    public static void checkout (Context context, final int accountID, final String description, final float amount, final String accessToken){
+    public static void checkout (Context context, final int accountID, final String payer, final float amount, final String accessToken){
         RequestQueue queue = Volley.newRequestQueue(context);
         StringRequest sr = new StringRequest(Request.Method.POST, checkoutURI, new Response.Listener<String>() {
 
-            // TODO: Store the account_id in our database or locally on the users device
             @Override
             public void onResponse(String response) {
                 try {
                     JSONObject responseJSON = new JSONObject(response);
                     //TODO create an intent to fulfill the checkout uri. The checkout uri takes care of the user paying
-                    // We will need a way later on to track how much has been paid to events
-                    String checkoutURI = responseJSON.getJSONObject("hosted_checkout").getString("checkout_uri");
+                    // TODO add a this checkout to the firebase as a pending payment for this account, including storing
+                    // the name of the person paying and the amount being paid
+                    String hostedCheckoutURI = responseJSON.getJSONObject("hosted_checkout").getString("checkout_uri");
 
-                    Log.i(TAG, checkoutURI);
+                    Log.i(TAG, hostedCheckoutURI);
                 } catch (JSONException e) {
 
                 }
@@ -209,10 +211,62 @@ public class WePay {
             protected Map<String, String> getParams() {
                 Map<String,String> params = new HashMap<String, String>();
                 params.put("account_id", Integer.toString(accountID));
-                params.put("short_description", description);
+                params.put("short_description", payer);
                 params.put("type", "personal");
                 params.put("amount", Float.toString(amount));
                 params.put("currency", "USD");
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String,String> params = new HashMap<String, String>();
+                params.put("Content-Type","application/x-www-form-urlencoded");
+                params.put("Authorization", "Bearer " + accessToken);
+                return params;
+            }
+        };
+        queue.add(sr);
+    }
+
+    // Check the status of a pending checkout to see if it has been made or cancelled
+    public static void getCheckoutStatus (Context context, final int checkoutID, final String accessToken){
+        RequestQueue queue = Volley.newRequestQueue(context);
+        StringRequest sr = new StringRequest(Request.Method.POST, checkoutStatusURI, new Response.Listener<String>() {
+
+            // TODO: Store the account_id in our database or locally on the users device
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject responseJSON = new JSONObject(response);
+
+                    String state = responseJSON.getString("state");
+                    String payer = responseJSON.getString("short_description");
+                    Double amount = responseJSON.getDouble("amount");
+
+                    Log.i(TAG, "Status: " + state);
+                    Log.i(TAG, "Payer: " + payer);
+                    Log.i(TAG, "Amount: " + amount);
+
+                    // TODO: If the state of the payment is authorized, captured, or released, then set the payment status to complete in the firebase
+                    // If the payment status is anything else except "new" delete the payment, as the user cancelled it for some reason
+                    // For reference: https://developer.wepay.com/api/api-calls/checkout#states
+
+                } catch (JSONException e) {
+                    Log.i(TAG, "JSON Exception");
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, "Error response " + error.toString());
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String,String> params = new HashMap<String, String>();
+                params.put("checkout_id", Integer.toString(checkoutID));
                 return params;
             }
 
