@@ -33,20 +33,11 @@
             android:id="@+id/eventTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="20dp"
             android:ems="10"
             android:hint="@string/hint_eventTitle"
             android:textSize="20sp"
             android:inputType="textPersonName" />
-
-        <EditText
-            android:id="@+id/eventInfo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/hint_eventInfo"
-            android:layout_marginBottom="10dp"
-            android:ems="10"
-            android:inputType="textMultiLine" />
 
         <EditText
             android:id="@+id/eventLocation"
