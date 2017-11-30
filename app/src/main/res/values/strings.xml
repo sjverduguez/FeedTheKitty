@@ -22,7 +22,16 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
-    <string name="total_col">Total Collected:</string>
+    <string name="total_col">Total Collected: </string>
+    <string name="event_name">Event Name: </string>
+    <string name="fundTotal">Location: </string>
+    <string name="date">Date:</string>
+    <string name="time">Time:</string>
+    <string name="num_attendees">Number of Attendees:</string>
+    <string name="recom_amt">Recommended Contribution:</string>
+    <string name="atn_button">Attend</string>
+    <string name="contri_button">Contribute</string>
+    <string name="detail_attend"> Attending: </string>
 
 
 </resources>
