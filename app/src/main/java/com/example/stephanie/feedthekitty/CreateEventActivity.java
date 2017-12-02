@@ -7,6 +7,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 
 /**
  * Created by Stephanie Verduguez 11/29/2017
@@ -19,6 +22,8 @@ public class CreateEventActivity extends AppCompatActivity {
 
    private Button createEventButton;
 
+   private DatabaseReference mRef;
+
     private static final String TAG = " Create Event Activity";
 
     //TODO: need to create account for WePay
@@ -27,6 +32,9 @@ public class CreateEventActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
+
+        DatabaseReference ref = FirebaseDatabase.getInstance()
+                .getReferenceFromUrl("https://feedthekitty-a803d.firebaseio.com/");
 
         eventTitle = (EditText) findViewById(R.id.eventTitle);
         fundTotal = (EditText) findViewById(R.id.eventFund_total);
@@ -48,6 +56,20 @@ public class CreateEventActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Must initialize all fields",Toast.LENGTH_SHORT).show();
 
                 }else{
+
+                    String eventName = eventTitle.getText().toString();
+
+                    String fundGoal = fundTotal.getText().toString();
+
+                    DatabaseReference eventNameRef = FirebaseDatabase.getInstance()
+                            .getReferenceFromUrl("https://feedthekitty-a803d.firebaseio.com");
+
+                   DatabaseReference eventNameChildRef = eventNameRef.child(eventName);
+
+                   DatabaseReference setEventName = eventNameChildRef.child("Fund Goal");
+
+                    setEventName.setValue("$" + fundGoal);
+
 
                     event.setEventTitle(eventTitle.getText().toString());
                     event.setFundTotal(Integer.parseInt(fundTotal.getText().toString()));
