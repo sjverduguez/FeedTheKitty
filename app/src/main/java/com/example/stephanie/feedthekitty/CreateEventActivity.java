@@ -1,5 +1,6 @@
 package com.example.stephanie.feedthekitty;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -22,8 +23,6 @@ public class CreateEventActivity extends AppCompatActivity {
 
    private Button createEventButton;
 
-   private DatabaseReference mRef;
-
     private static final String TAG = " Create Event Activity";
 
     //TODO: need to create account for WePay
@@ -32,9 +31,6 @@ public class CreateEventActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
-
-        DatabaseReference ref = FirebaseDatabase.getInstance()
-                .getReferenceFromUrl("https://feedthekitty-a803d.firebaseio.com/");
 
         eventTitle = (EditText) findViewById(R.id.eventTitle);
         fundTotal = (EditText) findViewById(R.id.eventFund_total);
@@ -57,6 +53,9 @@ public class CreateEventActivity extends AppCompatActivity {
 
                 }else{
 
+                    /*Add Event name to firebase and add fund goal as a child of event name.
+                    * We can change fund goal to be funds raised once we integrate with WePay*/
+
                     String eventName = eventTitle.getText().toString();
 
                     String fundGoal = fundTotal.getText().toString();
@@ -64,9 +63,9 @@ public class CreateEventActivity extends AppCompatActivity {
                     DatabaseReference eventNameRef = FirebaseDatabase.getInstance()
                             .getReferenceFromUrl("https://feedthekitty-a803d.firebaseio.com");
 
-                   DatabaseReference eventNameChildRef = eventNameRef.child(eventName);
+                    DatabaseReference eventNameChildRef = eventNameRef.child(eventName);
 
-                   DatabaseReference setEventName = eventNameChildRef.child("Fund Goal");
+                    DatabaseReference setEventName = eventNameChildRef.child("Fund Goal");
 
                     setEventName.setValue("$" + fundGoal);
 
@@ -75,6 +74,11 @@ public class CreateEventActivity extends AppCompatActivity {
                     event.setFundTotal(Integer.parseInt(fundTotal.getText().toString()));
 
                     setResult(RESULT_OK, event.packageToIntent());
+
+                    Intent intent = new Intent(CreateEventActivity.this, EventDetailsActivity.class);
+                    intent.putExtra("EVENT_NAME", eventName);
+                    startActivity(intent);
+
                     finish();
 
                 }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /*
     Created by Stephanie Verduguez on 11/29/2017
@@ -25,10 +26,12 @@ public class EventDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_details);
 
+        final String name = getIntent().getStringExtra("EVENT_NAME");
+
         Event event = new Event(getIntent());
 
         eventName = (TextView) findViewById(R.id.detail_eventTitle_text);
-        eventName.setText(event.getEventTitle());
+        eventName.setText(name);
 
         fundTotal = (TextView) findViewById(R.id.detail_total_text);
         fundTotal.setText("$" + event.getFundTotal().toString());
@@ -39,6 +42,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         attend_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
 
                 //TODO: need firebase for this
 
