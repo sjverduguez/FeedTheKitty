@@ -1,11 +1,8 @@
 package com.example.stephanie.feedthekitty;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -60,33 +57,28 @@ public class CreateEventActivity extends AppCompatActivity {
                     * We can change fund goal to be funds raised once we integrate with WePay*/
 
                     String eventName = eventTitle.getText().toString();
+
                     String fundGoal = fundTotal.getText().toString();
 
-                    SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("com.example.stephanie.FeedTheKitty", Context.MODE_PRIVATE);
-                    String accessToken = sharedPref.getString("AccessToken", null);
-                    Log.i(TAG, "AccessToken: " + accessToken);
-                    WePay.createAccount(getApplicationContext(), eventName, "Description Here", 10, null, accessToken, fundGoal);
-
-                    /*DatabaseReference eventNameRef = FirebaseDatabase.getInstance()
+                    DatabaseReference eventNameRef = FirebaseDatabase.getInstance()
                             .getReferenceFromUrl("https://feedthekitty-a803d.firebaseio.com");
 
                     DatabaseReference eventNameChildRef = eventNameRef.child(eventName);
 
-
                     DatabaseReference setEventName = eventNameChildRef.child("Fund Goal");
 
-                    setEventName.setValue("$" + fundGoal); */
+                    setEventName.setValue("$" + fundGoal);
 
 
+                    //event.setEventTitle(eventTitle.getText().toString());
+                    //event.setFundTotal(Integer.parseInt(fundTotal.getText().toString()));
 
-                    /*event.setEventTitle(eventTitle.getText().toString());
-                    event.setFundTotal(Integer.parseInt(fundTotal.getText().toString()));
-
-                    setResult(RESULT_OK, event.packageToIntent());
+                    //setResult(RESULT_OK, event.packageToIntent());
 
                     Intent intent = new Intent(CreateEventActivity.this, EventDetailsActivity.class);
                     intent.putExtra("EVENT_NAME", eventName);
-                    startActivity(intent); */
+                    intent.putExtra("FUND_GOAL", fundGoal);
+                    startActivity(intent);
 
                     finish();
 

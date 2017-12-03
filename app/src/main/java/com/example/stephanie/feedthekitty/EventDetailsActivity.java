@@ -14,6 +14,7 @@ public class EventDetailsActivity extends AppCompatActivity {
 
     TextView eventName;
     TextView fundTotal;
+    TextView fundGoal;
 
     Button attend_button;
     Button contri_button;
@@ -27,14 +28,16 @@ public class EventDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_event_details);
 
         final String name = getIntent().getStringExtra("EVENT_NAME");
+        final String goal = getIntent().getStringExtra("FUND_GOAL");
 
-        Event event = new Event(getIntent());
+        fundGoal = (TextView) findViewById(R.id.fund_goal);
+        fundGoal.setText("Fund Goal: $" + goal);
 
         eventName = (TextView) findViewById(R.id.detail_eventTitle_text);
-        eventName.setText(name);
+        eventName.setText(name + "\n");
 
-        fundTotal = (TextView) findViewById(R.id.detail_total_text);
-        fundTotal.setText("$" + event.getFundTotal().toString());
+        fundTotal = (TextView) findViewById(R.id.total_collected);
+        fundTotal.setText("Total Collected: $" + goal);
 
         attend_button = (Button) findViewById(R.id.detail_attend_button);
         contri_button = (Button) findViewById(R.id.detail_contri_button);
