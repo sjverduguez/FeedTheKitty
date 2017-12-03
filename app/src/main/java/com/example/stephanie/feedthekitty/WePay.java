@@ -1,6 +1,8 @@
 package com.example.stephanie.feedthekitty;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -13,6 +15,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,8 +25,10 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by Jack on 11/27/2017.
@@ -47,19 +53,27 @@ public class WePay {
         RequestQueue queue = Volley.newRequestQueue(context);
         StringRequest sr = new StringRequest(Request.Method.POST, userURI, new Response.Listener<String>() {
 
-            // TODO: Store the user id and access token on the users device
             // NOTE: Repeating this function with the same email address will give the same result
             @Override
             public void onResponse(String response) {
                 try {
                     JSONObject responseJSON = new JSONObject(response);
 
+                    String accessToken = responseJSON.getString("access_token");
+                    String userID = responseJSON.getString("user_id");
 
-                    Log.i(TAG, "User ID: " + responseJSON.getString("user_id"));
-                    Log.i(TAG, "Access Token: " + responseJSON.getString("access_token"));
+
+                    Log.i(TAG, "User ID: " + userID);
+                    Log.i(TAG, "Access Token: " + accessToken);
+
+                    SharedPreferences sharedPref = context.getSharedPreferences("com.example.stephanie.FeedTheKitty", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putString("AccessToken", accessToken);
+                    editor.putString("UserID", userID);
+                    editor.commit();
 
                     // Send email to a user to confirm the creation of their account
-                    sendConfirmation(context, responseJSON.getString("access_token"));
+                    sendConfirmation(context, accessToken);
                 } catch (JSONException e) {
 
                 }
@@ -136,7 +150,7 @@ public class WePay {
     // Account Desciption is the description of the event if any
     // The time is the time of the event stored as the epoch time
     // TODO: The account will be added to the firebase along with a description of the event
-    public static void createAccount (Context context, final String accountName, final String accountDescription, final long time, final String imageURI, final String accessToken){
+    public static void createAccount (final Context context, final String accountName, final String accountDescription, final long time, final String imageURI, final String accessToken, final String goal){
         RequestQueue queue = Volley.newRequestQueue(context);
         StringRequest sr = new StringRequest(Request.Method.POST, createAccountURI, new Response.Listener<String>() {
 
@@ -147,7 +161,44 @@ public class WePay {
             public void onResponse(String response) {
                 try {
                     JSONObject responseJSON = new JSONObject(response);
-                    Log.i(TAG, "Account ID: " + responseJSON.getString("account_id"));
+                    String account_id = responseJSON.getString("account_id");
+                    Log.i(TAG, "Account ID: " + account_id);
+
+                    SharedPreferences sharedPref = context.getSharedPreferences("com.example.stephanie.FeedTheKitty", Context.MODE_PRIVATE);
+
+                    // Add this event to the list of events hosted on this device
+                    Set<String> myEvents = sharedPref.getStringSet("hosting_events", new HashSet<String>());
+                    myEvents.add(account_id);
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putStringSet("hosting_events", myEvents);
+                    editor.commit();
+
+                    DatabaseReference eventNameRef = FirebaseDatabase.getInstance()
+                            .getReferenceFromUrl("https://feedthekitty-a803d.firebaseio.com");
+
+                    DatabaseReference eventIDRef = eventNameRef.child(account_id);
+                    DatabaseReference eventFundGoal = eventIDRef.child("Fund Goal");
+                    DatabaseReference eventTime = eventIDRef.child("Time");
+                    DatabaseReference eventName = eventIDRef.child("Name");
+                    DatabaseReference eventDescription = eventIDRef.child("Description");
+                    DatabaseReference eventAccessToken = eventIDRef.child("AccessToken");
+
+                    eventFundGoal.setValue(goal);
+                    eventTime.setValue(time);
+                    eventName.setValue(accountName);
+                    eventDescription.setValue(accountDescription);
+                    eventAccessToken.setValue(accessToken);
+
+
+                    Event event = new Event();
+                    event.setEventTitle(accountName);
+                    event.setFundTotal(Integer.parseInt(goal));
+
+
+                    Intent intent = new Intent(context, EventDetailsActivity.class);
+                    intent.putExtra("EVENT_NAME", accountName);
+                    context.startActivity(intent);
+
                 } catch (JSONException e) {
 
                 }
