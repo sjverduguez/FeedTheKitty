@@ -32,6 +32,8 @@
     <string name="atn_button">Attend</string>
     <string name="contri_button">Contribute</string>
     <string name="detail_attend"> Attending: </string>
+    <string name="last_name">Last Name</string>
+    <string name="first_name">First Name</string>
 
 
 </resources>

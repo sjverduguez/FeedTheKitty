@@ -21,7 +21,7 @@ public class CreateEventActivity extends AppCompatActivity {
     private EditText eventTitle;
     private EditText fundTotal;
 
-   private Button createEventButton;
+    private Button createEventButton;
 
     private static final String TAG = " Create Event Activity";
 
@@ -41,7 +41,7 @@ public class CreateEventActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Event event = new Event();
+                //Event event = new Event();
 
 
                 /*Check if all input fields are initialized, otherwise package
@@ -70,10 +70,10 @@ public class CreateEventActivity extends AppCompatActivity {
                     setEventName.setValue("$" + fundGoal);
 
 
-                    event.setEventTitle(eventTitle.getText().toString());
-                    event.setFundTotal(Integer.parseInt(fundTotal.getText().toString()));
+                    //event.setEventTitle(eventTitle.getText().toString());
+                    //event.setFundTotal(Integer.parseInt(fundTotal.getText().toString()));
 
-                    setResult(RESULT_OK, event.packageToIntent());
+                    //setResult(RESULT_OK, event.packageToIntent());
 
                     Intent intent = new Intent(CreateEventActivity.this, EventDetailsActivity.class);
                     intent.putExtra("EVENT_NAME", eventName);
