@@ -111,6 +111,7 @@
             android:textStyle="bold" />
 
         <ListView
+            android:id="@+id/contributions"
             android:layout_width="336dp"
             android:layout_height="245dp"
             android:layout_marginEnd="8dp"

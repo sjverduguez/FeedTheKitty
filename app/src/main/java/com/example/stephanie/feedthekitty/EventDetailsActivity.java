@@ -12,8 +12,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.time.Duration;
+import java.util.ArrayList;
 
 /*
     Created by Stephanie Verduguez on 11/29/2017
@@ -78,9 +81,28 @@ public class EventDetailsActivity extends AppCompatActivity {
                 eventName.setText(eventDetails.child("Name").getValue().toString());
                 fundGoal.setText("Fund Goal: $" + eventDetails.child("Fund Goal").getValue().toString());
                 description.setText(eventDetails.child("Description").getValue().toString());
-                accessToken = eventDetails.child("AccessToken").getValue().toString();
                 // fundTotal.setText("Total Collected: $" + goal);
 
+                accessToken = eventDetails.child("AccessToken").getValue().toString();
+
+                Iterable<DataSnapshot> checkouts = eventDetails.child("Checkout").getChildren();
+
+                ArrayList<String> contributionList = new ArrayList<String>();
+
+                for (DataSnapshot snapshot : checkouts){
+                    String payer = snapshot.child("Payer").getValue().toString();
+                    String amount = snapshot.child("Amount").getValue().toString();
+                    contributionList.add(payer + " contributed $" + amount);
+                }
+
+                String[] contributions = new String[contributionList.size()];
+
+                contributions = contributionList.toArray(contributions);
+
+                ArrayAdapter adapter = new ArrayAdapter<String>(EventDetailsActivity.this,R.layout.contribution_list_view,contributions);
+
+                ListView listView = (ListView) findViewById(R.id.contributions);
+                listView.setAdapter(adapter);
             }
 
             @Override
