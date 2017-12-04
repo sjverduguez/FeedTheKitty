@@ -13,8 +13,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-        startActivity(intent);
+        SharedPreferences sharedPreferences = getSharedPreferences("com.example.stephanie.FeedTheKitty", MODE_PRIVATE);
+
+        if (sharedPreferences.contains("AccessToken")){
+            Intent intent = new Intent(MainActivity.this, EventViewActivity.class);
+            startActivity(intent);
+        } else {
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
+        }
 
     }
 }

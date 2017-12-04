@@ -1,6 +1,7 @@
 package com.example.stephanie.feedthekitty;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -26,6 +27,7 @@ public class LoginActivity extends AppCompatActivity {
         lastName = (EditText) findViewById(R.id.lastName);
 
         loginButton = (Button) findViewById(R.id.login_button);
+
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override

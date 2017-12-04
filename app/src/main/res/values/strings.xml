@@ -34,6 +34,10 @@
     <string name="detail_attend"> Attending: </string>
     <string name="last_name">Last Name</string>
     <string name="first_name">First Name</string>
+    <string name="events_attending">Events Attending:</string>
+    <string name="events_hosting">Events Hosting:</string>
+    <string name="host_an_event">Host an event</string>
+    <string name="title_activity_event_view">EventViewActivity</string>
 
 
 </resources>
