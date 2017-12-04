@@ -89,13 +89,19 @@ public class EventDetailsActivity extends AppCompatActivity {
 
                 ArrayList<String> contributionList = new ArrayList<String>();
 
+                float totalContributed = 0;
+
                 for (DataSnapshot snapshot : checkouts){
                     Object payer = snapshot.child("Payer").getValue();
                     Object amount = snapshot.child("Amount").getValue();
                     if (payer != null && amount != null){
-                        contributionList.add(payer.toString() + " contributed $" + amount.toString());
+                        float amt = Float.parseFloat(amount.toString());
+                        totalContributed = totalContributed + amt;
+                        contributionList.add(payer.toString() + " contributed $" + String.format("%.2f", amt));
                     }
                 }
+
+                fundTotal.setText("Total Collected: $" + String.format("%.2f", totalContributed));
 
                 String[] contributions = new String[contributionList.size()];
 
