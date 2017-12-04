@@ -71,10 +71,11 @@
             android:text="@string/atn_button" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="66dp"
             android:layout_marginBottom="15dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_gravity="center">
 
             <EditText
                 android:id="@+id/detail_contribute_amount"
@@ -92,6 +93,14 @@
                 android:text="@string/contri_button" />
 
         </LinearLayout>
+
+        <Button
+            android:id="@+id/share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:text="Share this Event" />
 
         <TextView
             android:id="@+id/detail_attend_string"

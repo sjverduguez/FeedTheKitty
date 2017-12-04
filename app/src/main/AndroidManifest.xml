@@ -19,22 +19,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="www.feedthekittyapp.com"
-                    android:path="/log_in"
-                    android:scheme="http" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".LoginActivity" />
         <activity android:name=".CreateEventActivity" />
         <activity android:name=".EventDetailsActivity" />
-        <activity android:name=".EventViewActivity"/>
+        <activity android:name=".EventViewActivity" />
+        <activity android:name=".HandleUrlActivity">
+            <intent-filter>
+                <data android:scheme="http" android:host="feedthekittyapp.com"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

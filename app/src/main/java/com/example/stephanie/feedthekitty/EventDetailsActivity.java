@@ -1,8 +1,11 @@
 package com.example.stephanie.feedthekitty;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -19,6 +22,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.time.Duration;
 
 /*
     Created by Stephanie Verduguez on 11/29/2017
@@ -38,6 +43,7 @@ public class EventDetailsActivity extends AppCompatActivity {
 
     Button attend_button;
     Button contri_button;
+    Button share_button;
 
     private static final String TAG = "Event Details Activity";
 
@@ -59,6 +65,7 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         attend_button = (Button) findViewById(R.id.detail_attend_button);
         contri_button = (Button) findViewById(R.id.detail_contri_button);
+        share_button = (Button) findViewById(R.id.share);
 
         event_id = getIntent().getStringExtra("EVENT_ID");
         DatabaseReference events = FirebaseDatabase.getInstance()
@@ -99,6 +106,31 @@ public class EventDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 WePay.checkout(getApplicationContext(), Integer.parseInt(event_id), name, Float.parseFloat(contributeAmount.getText().toString()), accessToken);
+            }
+        });
+
+        share_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                // Creates a Uri based on a base Uri and a record ID based on the contact's last name
+                // Declares the base URI string
+                String link = "http://feedthekittyapp.com/" + event_id;
+
+                // Declares a path string for URIs that you use to copy data
+                // Declares the Uri to paste to the clipboard
+                Uri copyUri = Uri.parse(link);
+
+
+                // Creates a new URI clip object. The system uses the anonymous getContentResolver() object to
+                // get MIME types from provider. The clip object's label is "URI", and its data is
+                // the Uri previously created.
+                ClipData clip = ClipData.newUri(getContentResolver(), "URI", copyUri);
+                clipboard.setPrimaryClip(clip);
+
+
+                Toast.makeText(getApplicationContext(), "Event copied to clipboard", Toast.LENGTH_LONG).show();
+
             }
         });
 
