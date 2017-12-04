@@ -28,6 +28,7 @@ public class EventViewActivity extends AppCompatActivity {
             }
         });
 
+        WePay.updatePendingCheckouts(getApplicationContext());
 
     }
 

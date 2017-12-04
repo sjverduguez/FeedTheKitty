@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
@@ -240,6 +241,13 @@ public class WePay {
                     // TODO add a this checkout to the locally stored list of pending payments for this user
                     String url = responseJSON.getJSONObject("hosted_checkout").getString("checkout_uri");
 
+                    SharedPreferences sharedPref = context.getSharedPreferences("com.example.stephanie.FeedTheKitty", Context.MODE_MULTI_PROCESS);
+                    String checkout_id = responseJSON.getString("checkout_id");
+
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putString("pending_checkout", checkout_id);
+                    editor.commit();
+
                     Intent i = new Intent(Intent.ACTION_VIEW);
                     i.setData(Uri.parse(url));
                     context.startActivity(i);
@@ -279,7 +287,7 @@ public class WePay {
     }
 
     // Check the status of a pending checkout to see if it has been made or cancelled
-    public static void getCheckoutStatus (Context context, final int checkoutID, final String accessToken){
+    public static void getCheckoutStatus (final Context context, final int checkoutID, final String accessToken){
         RequestQueue queue = Volley.newRequestQueue(context);
         StringRequest sr = new StringRequest(Request.Method.POST, checkoutStatusURI, new Response.Listener<String>() {
 
@@ -297,6 +305,19 @@ public class WePay {
                     // TODO: If the state of the payment is authorized, captured, or released, then add the payment to the account in the firebase
                     // If the state of the payment is still new, do nothing. If it is anything else, you can delete it from the pending payments
                     // For reference: https://developer.wepay.com/api/api-calls/checkout#states
+
+                    if (state.equals("authorized") || state.equals("captured") || state.equals("released")) {
+                        Log.i(TAG, "Checkout: " + checkoutID + " added to event");
+                        DatabaseReference eventNameRef = FirebaseDatabase.getInstance()
+                                .getReferenceFromUrl("https://feedthekitty-a803d.firebaseio.com");
+                        DatabaseReference event = eventNameRef.child(accountId);
+                        DatabaseReference checkouts = event.child("Checkout");
+                        DatabaseReference checkout = checkouts.child(Integer.toString(checkoutID));
+                        DatabaseReference amountPaidRef = checkout.child("Amount");
+                        DatabaseReference payerRef = checkout.child("Payer");
+                        amountPaidRef.setValue(amount);
+                        payerRef.setValue(payer);
+                    }
 
                 } catch (JSONException e) {
                     Log.i(TAG, "JSON Exception");
@@ -325,6 +346,16 @@ public class WePay {
             }
         };
         queue.add(sr);
+    }
+
+    public static void updatePendingCheckouts(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences("com.example.stephanie.FeedTheKitty", Context.MODE_MULTI_PROCESS);
+        String pendingCheckouts = sharedPref.getString("pending_checkout", null);
+        String accessToken = sharedPref.getString("AccessToken", null);
+
+        if (pendingCheckouts != null) {
+            getCheckoutStatus(context, Integer.parseInt(pendingCheckouts), accessToken);
+        }
     }
 
 

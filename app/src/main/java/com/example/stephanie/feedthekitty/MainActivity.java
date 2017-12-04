@@ -13,7 +13,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("com.example.stephanie.FeedTheKitty", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("com.example.stephanie.FeedTheKitty", MODE_MULTI_PROCESS);
 
         if (sharedPreferences.contains("AccessToken")){
             Intent intent = new Intent(MainActivity.this, EventViewActivity.class);
@@ -22,6 +22,5 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
         }
-
     }
 }
