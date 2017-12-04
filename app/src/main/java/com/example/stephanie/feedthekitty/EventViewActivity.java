@@ -61,13 +61,18 @@ public class EventViewActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        WePay.updatePendingCheckouts(getApplicationContext());
     }
 
     public static void addEvent(Context context, String eventName) {
         eventArrayList.add(eventName);
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        WePay.updatePendingCheckouts(getApplicationContext());
     }
 
 }

@@ -7,119 +7,123 @@
     tools:context="com.example.stephanie.feedthekitty.EventDetailsActivity"
     tools:layout_editor_absoluteY="81dp">
 
-    <LinearLayout
-        android:layout_width="365dp"
-        android:layout_height="483dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-
-
-        <TextView
-            android:id="@+id/eventName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-
-            android:text="Loading Event"
-            android:gravity="center"
-            android:textSize="30sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="20sp" />
-
+    <ScrollView
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent">
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="66dp"
-            android:layout_marginBottom="15dp"
-            android:orientation="vertical">
+            android:layout_width="365dp"
+            android:layout_height="483dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+
 
             <TextView
-                android:id="@+id/fund_goal"
+                android:id="@+id/eventName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Fund Goal:"
-                android:textSize="20sp" />
+                android:layout_marginBottom="15dp"
+
+                android:text="Loading Event"
+                android:gravity="center"
+                android:textSize="30sp"
+                android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/total_collected"
+                android:id="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/total_col"
                 android:textSize="20sp" />
 
-        </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="66dp"
+                android:layout_marginBottom="15dp"
+                android:orientation="vertical">
 
-        <Button
-            android:id="@+id/detail_attend_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/atn_button" />
+                <TextView
+                    android:id="@+id/fund_goal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Fund Goal:"
+                    android:textSize="20sp" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="66dp"
-            android:layout_marginBottom="15dp"
-            android:orientation="horizontal"
-            android:layout_gravity="center">
+                <TextView
+                    android:id="@+id/total_collected"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/total_col"
+                    android:textSize="20sp" />
 
-            <EditText
-                android:id="@+id/detail_contribute_amount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="Amount"
-                android:inputType="numberDecimal"/>
+            </LinearLayout>
 
             <Button
-                android:id="@+id/detail_contri_button"
+                android:id="@+id/detail_attend_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/atn_button" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="66dp"
+                android:layout_marginBottom="15dp"
+                android:orientation="horizontal"
+                android:layout_gravity="center">
+
+                <EditText
+                    android:id="@+id/detail_contribute_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Amount"
+                    android:inputType="numberDecimal"/>
+
+                <Button
+                    android:id="@+id/detail_contri_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/contri_button" />
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/share"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="10dp"
-                android:text="@string/contri_button" />
+                android:text="Share this Event" />
+
+            <TextView
+                android:id="@+id/detail_attend_string"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/detail_attend"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <ListView
+                android:id="@+id/contributions"
+                android:layout_width="336dp"
+                android:layout_height="245dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:layout_editor_absoluteY="244dp" />
 
         </LinearLayout>
-
-        <Button
-            android:id="@+id/share"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="10dp"
-            android:text="Share this Event" />
-
-        <TextView
-            android:id="@+id/detail_attend_string"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/detail_attend"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <ListView
-            android:id="@+id/contributions"
-            android:layout_width="336dp"
-            android:layout_height="245dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="244dp" />
-
-    </LinearLayout>
+    </ScrollView>
 
 </android.support.constraint.ConstraintLayout>

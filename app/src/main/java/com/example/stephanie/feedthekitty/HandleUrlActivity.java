@@ -18,7 +18,7 @@ public class HandleUrlActivity extends AppCompatActivity {
         setContentView(R.layout.activity_handle_url);
 
         Uri data = getIntent().getData();
-        String eventId = data.getPath();
+        String eventId = data.getPath().replace("/", "");
 
         SharedPreferences sharedPreferences = getSharedPreferences("com.example.stephanie.FeedTheKitty", MODE_MULTI_PROCESS);
 

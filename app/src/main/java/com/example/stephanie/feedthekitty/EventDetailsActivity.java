@@ -56,7 +56,6 @@ public class EventDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_details);
 
-
         contributeAmount = (EditText) findViewById(R.id.detail_contribute_amount);
         fundGoal = (TextView) findViewById(R.id.fund_goal);
 
@@ -73,26 +72,29 @@ public class EventDetailsActivity extends AppCompatActivity {
         event_id = getIntent().getStringExtra("EVENT_ID");
         DatabaseReference events = FirebaseDatabase.getInstance()
                 .getReferenceFromUrl("https://feedthekitty-a803d.firebaseio.com");
+        DatabaseReference eventDetails = events.child(event_id);
 
-        events.addListenerForSingleValueEvent(new ValueEventListener() {
+
+        eventDetails.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                DataSnapshot eventDetails = dataSnapshot.child(event_id);
-                eventName.setText(eventDetails.child("Name").getValue().toString());
-                fundGoal.setText("Fund Goal: $" + eventDetails.child("Fund Goal").getValue().toString());
-                description.setText(eventDetails.child("Description").getValue().toString());
+                eventName.setText(dataSnapshot.child("Name").getValue().toString());
+                fundGoal.setText("Fund Goal: $" + dataSnapshot.child("Fund Goal").getValue().toString());
+                description.setText(dataSnapshot.child("Description").getValue().toString());
                 // fundTotal.setText("Total Collected: $" + goal);
 
-                accessToken = eventDetails.child("AccessToken").getValue().toString();
+                accessToken = dataSnapshot.child("AccessToken").getValue().toString();
 
-                Iterable<DataSnapshot> checkouts = eventDetails.child("Checkout").getChildren();
+                Iterable<DataSnapshot> checkouts = dataSnapshot.child("Checkout").getChildren();
 
                 ArrayList<String> contributionList = new ArrayList<String>();
 
                 for (DataSnapshot snapshot : checkouts){
-                    String payer = snapshot.child("Payer").getValue().toString();
-                    String amount = snapshot.child("Amount").getValue().toString();
-                    contributionList.add(payer + " contributed $" + amount);
+                    Object payer = snapshot.child("Payer").getValue();
+                    Object amount = snapshot.child("Amount").getValue();
+                    if (payer != null && amount != null){
+                        contributionList.add(payer.toString() + " contributed $" + amount.toString());
+                    }
                 }
 
                 String[] contributions = new String[contributionList.size()];
@@ -163,6 +165,13 @@ public class EventDetailsActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        WePay.updatePendingCheckouts(getApplicationContext());
+    }
+
+        @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.navigation, menu);
