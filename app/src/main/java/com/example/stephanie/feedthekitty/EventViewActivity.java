@@ -47,6 +47,8 @@ public class EventViewActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_view_events);
 
+
+
         Set<String> tempSet = prefs.getStringSet("host_set", null);
         if (tempSet != null)
             hostingEventArrayList.addAll(tempSet);
@@ -127,6 +129,8 @@ public class EventViewActivity extends AppCompatActivity {
         editor_stp.putStringSet("attend_set", attend_set);
         editor_stp.commit();
 
+        hostingEventArrayList = new ArrayList<String>();
+        attendingEventArrayList = new ArrayList<String>();
 
     }
 
