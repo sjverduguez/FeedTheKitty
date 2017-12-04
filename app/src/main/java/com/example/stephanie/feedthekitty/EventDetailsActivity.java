@@ -123,7 +123,7 @@ public class EventDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String event = eventName.getText().toString();
-                EventViewActivity.addAttendingEvent(event);
+                EventViewActivity.addAttendingEvent(event_id);
                 Toast.makeText(getApplicationContext(), "Attending: " + event, Toast.LENGTH_SHORT).show();
             }
         });

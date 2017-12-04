@@ -169,13 +169,6 @@ public class WePay {
 
                     SharedPreferences sharedPref = context.getSharedPreferences("com.example.stephanie.FeedTheKitty", Context.MODE_PRIVATE);
 
-                    // Add this event to the list of events hosted on this device
-                    Set<String> myEvents = sharedPref.getStringSet("hosting_events", new HashSet<String>());
-                    myEvents.add(account_id);
-                    SharedPreferences.Editor editor = sharedPref.edit();
-                    editor.putStringSet("hosting_events", myEvents);
-                    editor.commit();
-
                     DatabaseReference eventNameRef = FirebaseDatabase.getInstance()
                             .getReferenceFromUrl("https://feedthekitty-a803d.firebaseio.com");
 
@@ -196,6 +189,9 @@ public class WePay {
                     intent.putExtra("EVENT_ID", account_id);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
+
+                    EventViewActivity.addHostingEvent(account_id);
+
 
                 } catch (JSONException e) {
 
