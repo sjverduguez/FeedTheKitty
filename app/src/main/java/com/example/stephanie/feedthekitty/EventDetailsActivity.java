@@ -155,7 +155,6 @@ public class EventDetailsActivity extends AppCompatActivity {
                 // Declares the Uri to paste to the clipboard
                 Uri copyUri = Uri.parse(link);
 
-
                 // Creates a new URI clip object. The system uses the anonymous getContentResolver() object to
                 // get MIME types from provider. The clip object's label is "URI", and its data is
                 // the Uri previously created.
