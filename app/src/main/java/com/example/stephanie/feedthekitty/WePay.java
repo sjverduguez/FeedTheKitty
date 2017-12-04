@@ -3,6 +3,7 @@ package com.example.stephanie.feedthekitty;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -70,6 +71,7 @@ public class WePay {
                     SharedPreferences.Editor editor = sharedPref.edit();
                     editor.putString("AccessToken", accessToken);
                     editor.putString("UserID", userID);
+                    editor.putString("UserName", first_name + " " + last_name);
                     editor.commit();
 
                     // Send email to a user to confirm the creation of their account
@@ -226,7 +228,7 @@ public class WePay {
     // accessToken is for the person paying
     // payer is a description of the payment. It will be the name of the person making the payment so they can be given credit
     // amount is the amount of the payment in dollars
-    public static void checkout (Context context, final int accountID, final String payer, final float amount, final String accessToken){
+    public static void checkout (final Context context, final int accountID, final String payer, final float amount, final String accessToken){
         RequestQueue queue = Volley.newRequestQueue(context);
         StringRequest sr = new StringRequest(Request.Method.POST, checkoutURI, new Response.Listener<String>() {
 
@@ -236,9 +238,13 @@ public class WePay {
                     JSONObject responseJSON = new JSONObject(response);
                     // TODO create an intent to fulfill the checkout uri. The checkout uri takes care of the user paying
                     // TODO add a this checkout to the locally stored list of pending payments for this user
-                    String hostedCheckoutURI = responseJSON.getJSONObject("hosted_checkout").getString("checkout_uri");
+                    String url = responseJSON.getJSONObject("hosted_checkout").getString("checkout_uri");
 
-                    Log.i(TAG, hostedCheckoutURI);
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(url));
+                    context.startActivity(i);
+
+                    Log.i(TAG, url);
                 } catch (JSONException e) {
 
                 }
