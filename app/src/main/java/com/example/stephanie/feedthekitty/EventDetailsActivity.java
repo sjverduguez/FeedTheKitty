@@ -134,7 +134,12 @@ public class EventDetailsActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-                WePay.checkout(getApplicationContext(), Integer.parseInt(event_id), name, Float.parseFloat(contributeAmount.getText().toString()), accessToken);
+                if(contributeAmount.getText().toString().matches("")){
+                    Toast.makeText(getApplicationContext(), "You must enter an amount", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    WePay.checkout(getApplicationContext(), Integer.parseInt(event_id), name, Float.parseFloat(contributeAmount.getText().toString()), accessToken);
+                }
             }
         });
 
