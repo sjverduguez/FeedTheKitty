@@ -38,6 +38,7 @@
     <string name="events_hosting">Events Hosting:</string>
     <string name="host_an_event">Host an event</string>
     <string name="title_activity_event_view">EventViewActivity</string>
+    <string name="your_events">Your Events</string>
 
 
 </resources>

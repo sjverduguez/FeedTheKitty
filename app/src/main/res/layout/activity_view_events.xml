@@ -17,7 +17,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="32dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,6 +33,7 @@
                 android:text="@string/events_attending" />
 
             <ListView
+                android:id="@+id/attendingList"
                 android:layout_width="match_parent"
                 android:layout_height="194dp" />
 
@@ -48,6 +51,7 @@
                 android:text="@string/events_hosting" />
 
             <ListView
+                android:id="@+id/hostingList"
                 android:layout_width="match_parent"
                 android:layout_height="186dp" />
 
@@ -77,7 +81,7 @@
             android:id="@+id/Label"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Your Events"
+            android:text="@string/your_events"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
     </LinearLayout>
 

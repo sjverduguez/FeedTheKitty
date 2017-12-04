@@ -6,6 +6,9 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -70,6 +73,8 @@ public class CreateEventActivity extends AppCompatActivity {
                     Log.i(TAG, "AccessToken: " + accessToken);
                     WePay.createAccount(getApplicationContext(), eventName, eventDescription, 10, null, accessToken, fundGoal);
 
+                    EventViewActivity.addEvent(getApplicationContext(), eventName);
+
                     /*DatabaseReference eventNameRef = FirebaseDatabase.getInstance()
                             .getReferenceFromUrl("https://feedthekitty-a803d.firebaseio.com");
 
@@ -91,16 +96,30 @@ public class CreateEventActivity extends AppCompatActivity {
                     intent.putExtra("EVENT_NAME", eventName);
                     startActivity(intent); */
 
-                    finish();
+                    //finish();
 
                 }
 
             }
         });
 
-
-
-
-
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.navigation, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.navigation_home:
+                Intent intent = new Intent(CreateEventActivity.this, EventViewActivity.class);
+                startActivity(intent);
+        }
+        return true;
+    }
+
 }

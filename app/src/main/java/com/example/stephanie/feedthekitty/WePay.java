@@ -194,6 +194,7 @@ public class WePay {
 
                     Intent intent = new Intent(context, EventDetailsActivity.class);
                     intent.putExtra("EVENT_ID", account_id);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
 
                 } catch (JSONException e) {
