@@ -23,11 +23,16 @@ import java.util.ArrayList;
 public class EventViewActivity extends AppCompatActivity {
 
     Button createEventButton;
-    ListView attendingListView;
-    ListView hostingListView;
 
-    static ArrayList<String> eventArrayList = new ArrayList<String>();
-    static ArrayAdapter<String> adapter;
+    static ListView attendingListView;
+    static ListView hostingListView;
+
+    static ArrayList<String> hostingEventArrayList = new ArrayList<String>();
+    static ArrayList<String> attendingEventArrayList = new ArrayList<String>();
+
+    static ArrayAdapter<String> hostingAdapter;
+    static ArrayAdapter<String> attendingAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,20 +44,11 @@ public class EventViewActivity extends AppCompatActivity {
         attendingListView = (ListView) findViewById(R.id.attendingList);
         hostingListView = (ListView) findViewById(R.id.hostingList);
 
-        adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_item, eventArrayList);
-        hostingListView.setAdapter(adapter);
+        hostingAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_item, hostingEventArrayList);
+        attendingAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_item, attendingEventArrayList);
 
-        hostingListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                Intent intent = new Intent(EventViewActivity.this, EventDetailsActivity.class);
-
-
-
-
-            }
-        });
+        hostingListView.setAdapter(hostingAdapter);
+        attendingListView.setAdapter(attendingAdapter);
 
         createEventButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,9 +59,14 @@ public class EventViewActivity extends AppCompatActivity {
         });
     }
 
-    public static void addEvent(Context context, String eventName) {
-        eventArrayList.add(eventName);
-        adapter.notifyDataSetChanged();
+    public static void addHostingEvent(String eventName) {
+        hostingEventArrayList.add(eventName);
+        hostingAdapter.notifyDataSetChanged();
+    }
+
+    public static void addAttendingEvent(String eventName) {
+        attendingEventArrayList.add(eventName);
+        attendingAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -76,3 +77,4 @@ public class EventViewActivity extends AppCompatActivity {
     }
 
 }
+

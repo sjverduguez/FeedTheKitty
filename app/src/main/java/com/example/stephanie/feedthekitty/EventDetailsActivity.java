@@ -122,10 +122,9 @@ public class EventDetailsActivity extends AppCompatActivity {
         attend_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
-                //TODO: need firebase for this
-
+                String event = eventName.getText().toString();
+                EventViewActivity.addAttendingEvent(event);
+                Toast.makeText(getApplicationContext(), "Attending: " + event, Toast.LENGTH_SHORT).show();
             }
         });
 

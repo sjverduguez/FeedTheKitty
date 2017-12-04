@@ -73,7 +73,7 @@ public class CreateEventActivity extends AppCompatActivity {
                     Log.i(TAG, "AccessToken: " + accessToken);
                     WePay.createAccount(getApplicationContext(), eventName, eventDescription, 10, null, accessToken, fundGoal);
 
-                    EventViewActivity.addEvent(getApplicationContext(), eventName);
+                    EventViewActivity.addHostingEvent(eventName);
 
                     /*DatabaseReference eventNameRef = FirebaseDatabase.getInstance()
                             .getReferenceFromUrl("https://feedthekitty-a803d.firebaseio.com");
