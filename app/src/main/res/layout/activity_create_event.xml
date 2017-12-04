@@ -40,13 +40,13 @@
             android:inputType="textPersonName" />
 
         <EditText
-            android:id="@+id/eventLocation"
+            android:id="@+id/eventDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:ems="10"
-            android:hint="@string/hint_location"
-            android:inputType="textPostalAddress" />
+            android:hint="Event Description"
+            android:inputType="text" />
 
         <EditText
             android:id="@+id/eventFund_total"

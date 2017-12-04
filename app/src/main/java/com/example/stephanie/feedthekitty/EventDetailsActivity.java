@@ -7,6 +7,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 /*
     Created by Stephanie Verduguez on 11/29/2017
  */
@@ -15,11 +21,12 @@ public class EventDetailsActivity extends AppCompatActivity {
     TextView eventName;
     TextView fundTotal;
     TextView fundGoal;
+    TextView description;
 
     Button attend_button;
     Button contri_button;
 
-    private static final String TAG = " Event Details Activity";
+    private static final String TAG = "Event Details Activity";
 
 
     @Override
@@ -27,20 +34,39 @@ public class EventDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_details);
 
-        final String name = getIntent().getStringExtra("EVENT_NAME");
-        final String goal = getIntent().getStringExtra("FUND_GOAL");
+
 
         fundGoal = (TextView) findViewById(R.id.fund_goal);
-        fundGoal.setText("Fund Goal: $" + goal);
 
-        eventName = (TextView) findViewById(R.id.detail_eventTitle_text);
-        eventName.setText(name + "\n");
+        eventName = (TextView) findViewById(R.id.eventName);
 
         fundTotal = (TextView) findViewById(R.id.total_collected);
-        fundTotal.setText("Total Collected: $" + goal);
+
+        description = (TextView) findViewById(R.id.description);
 
         attend_button = (Button) findViewById(R.id.detail_attend_button);
         contri_button = (Button) findViewById(R.id.detail_contri_button);
+
+        final String event_id = getIntent().getStringExtra("EVENT_ID");
+        DatabaseReference events = FirebaseDatabase.getInstance()
+                .getReferenceFromUrl("https://feedthekitty-a803d.firebaseio.com");
+
+        events.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                DataSnapshot eventDetails = dataSnapshot.child(event_id);
+                eventName.setText(eventDetails.child("Name").getValue().toString());
+                fundGoal.setText("Fund Goal: $" + eventDetails.child("Fund Goal").getValue().toString());
+                description.setText(eventDetails.child("Description").getValue().toString());
+                // fundTotal.setText("Total Collected: $" + goal);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                eventName.setText("Error loading event");
+            }
+        });
 
         attend_button.setOnClickListener(new View.OnClickListener() {
             @Override

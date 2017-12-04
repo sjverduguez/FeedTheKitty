@@ -39,8 +39,9 @@ public class LoginActivity extends AppCompatActivity {
                     WePay.createUser(getApplicationContext(), email.getText().toString(), firstName.getText().toString(),
                             lastName.getText().toString());
 
-                    Intent intent = new Intent(LoginActivity.this, CreateEventActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), CreateEventActivity.class);
                     startActivity(intent);
+                    finish();
 
                 }
 

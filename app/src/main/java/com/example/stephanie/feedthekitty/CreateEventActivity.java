@@ -23,6 +23,7 @@ public class CreateEventActivity extends AppCompatActivity {
 
     private EditText eventTitle;
     private EditText fundTotal;
+    private EditText description;
 
     private Button createEventButton;
 
@@ -37,6 +38,7 @@ public class CreateEventActivity extends AppCompatActivity {
 
         eventTitle = (EditText) findViewById(R.id.eventTitle);
         fundTotal = (EditText) findViewById(R.id.eventFund_total);
+        description = (EditText) findViewById(R.id.eventDescription);
 
         createEventButton = (Button) findViewById(R.id.createEvent_button);
 
@@ -61,11 +63,12 @@ public class CreateEventActivity extends AppCompatActivity {
 
                     String eventName = eventTitle.getText().toString();
                     String fundGoal = fundTotal.getText().toString();
+                    String eventDescription = description.getText().toString();
 
                     SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("com.example.stephanie.FeedTheKitty", Context.MODE_PRIVATE);
                     String accessToken = sharedPref.getString("AccessToken", null);
                     Log.i(TAG, "AccessToken: " + accessToken);
-                    WePay.createAccount(getApplicationContext(), eventName, "Description Here", 10, null, accessToken, fundGoal);
+                    WePay.createAccount(getApplicationContext(), eventName, eventDescription, 10, null, accessToken, fundGoal);
 
                     /*DatabaseReference eventNameRef = FirebaseDatabase.getInstance()
                             .getReferenceFromUrl("https://feedthekitty-a803d.firebaseio.com");

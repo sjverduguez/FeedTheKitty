@@ -189,14 +189,8 @@ public class WePay {
                     eventDescription.setValue(accountDescription);
                     eventAccessToken.setValue(accessToken);
 
-
-                    Event event = new Event();
-                    event.setEventTitle(accountName);
-                    event.setFundTotal(Integer.parseInt(goal));
-
-
                     Intent intent = new Intent(context, EventDetailsActivity.class);
-                    intent.putExtra("EVENT_NAME", accountName);
+                    intent.putExtra("EVENT_ID", account_id);
                     context.startActivity(intent);
 
                 } catch (JSONException e) {
