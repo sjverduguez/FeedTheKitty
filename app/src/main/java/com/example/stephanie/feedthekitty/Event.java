@@ -9,7 +9,7 @@ import android.content.Intent;
 public class Event {
 
     private String eventTitle; //event name
-    private Integer fundTotal;  //fund amount raised
+    private String eventID;
 
     private static final String TAG = " Event Class";
 
@@ -19,18 +19,14 @@ public class Event {
     }
 
     public Event(Intent intent){
-
-        this.eventTitle = intent.getStringExtra("eventTitle");
-        this.fundTotal = intent.getIntExtra("fundTotal", 0);
+        this.eventID = intent.getStringExtra(eventID);
+        this.eventTitle = "name goes here";
 
     }
 
     public Intent packageToIntent(){
         Intent intent = new Intent();
-
         intent.putExtra("eventTitle", eventTitle);
-        intent.putExtra("fundTotal", fundTotal);
-
         return intent;
     }
 
@@ -38,20 +34,12 @@ public class Event {
         return eventTitle;
     }
 
+    public String getEventId() {
+        return eventID;
+    }
+
     public void setEventTitle(String eventTitle) {
         this.eventTitle = eventTitle;
-    }
-
-    public Integer getFundTotal() {
-        return fundTotal;
-    }
-
-    public void setFundTotal(Integer fundTotal) {
-        this.fundTotal = fundTotal;
-    }
-
-    public void addFunds(Integer amt){
-        fundTotal += amt;
     }
 
 }

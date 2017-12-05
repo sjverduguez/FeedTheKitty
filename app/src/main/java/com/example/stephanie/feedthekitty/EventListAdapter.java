@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,38 +52,16 @@ public class EventListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent){
 
         View newView = convertView;
-        ViewHolder holder;
 
         //retrieve current event
         Event curr = eventList.get(position);
 
-        if(convertView == null){
 
-            holder = new ViewHolder();
 
-            //creates the view
-            newView = inflater.inflate(R.layout.event_view, parent, false);
 
-            //retrieve data to populate holder fields
-            holder.eventTitle = (TextView) newView.findViewById(R.id.row_event_text);
-            holder.fundTotal = (TextView) newView.findViewById(R.id.row_total_text);
-            newView.setTag(holder);
-
-        }else{
-
-            holder = (ViewHolder) newView.getTag();
-        }
-
-        holder.eventTitle.setText(curr.getEventTitle());
-        holder.fundTotal.setText(curr.getFundTotal());
 
         return newView;
 
     }
 
-    static class ViewHolder{
-
-        TextView eventTitle;
-        TextView fundTotal;
-    }
 }

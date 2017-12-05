@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -32,6 +33,8 @@ public class EventViewActivity extends AppCompatActivity {
 
     static ArrayList<String> hostingEventArrayList = new ArrayList<String>();
     static ArrayList<String> attendingEventArrayList = new ArrayList<String>();
+    static ArrayList<String> hostingEventArrayListIds = new ArrayList<String>();
+    static ArrayList<String> attendingEventArrayListIds = new ArrayList<String>();
 
     static ArrayAdapter<String> hostingAdapter;
     static ArrayAdapter<String> attendingAdapter;
@@ -50,12 +53,18 @@ public class EventViewActivity extends AppCompatActivity {
 
 
         Set<String> tempSet = prefs.getStringSet("host_set", null);
-        if (tempSet != null)
-            hostingEventArrayList.addAll(tempSet);
+        if (tempSet != null) {
+            for (String eventId:  tempSet) {
+                addInitialHostingEvent(eventId);
+            }
+        }
 
         tempSet = prefs.getStringSet("attend_set", null);
-        if (tempSet != null)
-            attendingEventArrayList.addAll(tempSet);
+        if (tempSet != null) {
+            for (String eventId:  tempSet) {
+                addInitialAttendingEvent(eventId);
+            }
+        }
 
         if (savedInstanceState != null) {
             hostingEventArrayList = savedInstanceState.getStringArrayList("host_list");
@@ -79,15 +88,50 @@ public class EventViewActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
+        hostingListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(getApplicationContext(), EventDetailsActivity.class);
+                intent.putExtra("EVENT_ID", hostingEventArrayListIds.get(i));
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                getApplicationContext().startActivity(intent);
+            }
+        });
+        attendingListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(getApplicationContext(), EventDetailsActivity.class);
+                intent.putExtra("EVENT_ID", attendingEventArrayListIds.get(i));
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                getApplicationContext().startActivity(intent);
+            }
+        });
     }
 
-    public static void addHostingEvent(String eventName) {
-        hostingEventArrayList.add(eventName);
+
+    public static void addInitialHostingEvent(String eventId) {
+        Log.i("EventView", "Adding to hosting events");
+        hostingEventArrayListIds.add(eventId);
+        hostingEventArrayList.add(eventId);
+    }
+
+    public static void addInitialAttendingEvent(String eventId) {
+        attendingEventArrayListIds.add(eventId);
+        attendingEventArrayList.add(eventId);
+    }
+
+    public static void addHostingEvent(String eventId) {
+        Log.i("EventView", "Adding to hosting events");
+        hostingEventArrayListIds.add(eventId);
+        hostingEventArrayList.add(eventId);
         hostingAdapter.notifyDataSetChanged();
     }
 
-    public static void addAttendingEvent(String eventName) {
-        attendingEventArrayList.add(eventName);
+    public static void addAttendingEvent(String eventId) {
+        attendingEventArrayListIds.add(eventId);
+        attendingEventArrayList.add(eventId);
         attendingAdapter.notifyDataSetChanged();
     }
 
@@ -97,12 +141,18 @@ public class EventViewActivity extends AppCompatActivity {
         final SharedPreferences prefs = getPreferences(MODE_PRIVATE);
 
         Set<String> tempSet = prefs.getStringSet("host_set", null);
-        if (tempSet != null)
-            hostingEventArrayList.addAll(tempSet);
+        if (tempSet != null) {
+            for (String eventId:  tempSet) {
+                addHostingEvent(eventId);
+            }
+        }
 
         tempSet = prefs.getStringSet("attend_set", null);
-        if (tempSet != null)
-            attendingEventArrayList.addAll(tempSet);
+        if (tempSet != null) {
+            for (String eventId:  tempSet) {
+                addAttendingEvent(eventId);
+            }
+        }
 
         hostingAdapter.notifyDataSetChanged();
         attendingAdapter.notifyDataSetChanged();
