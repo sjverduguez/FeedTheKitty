@@ -71,28 +71,28 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
                 android:text="@string/atn_button" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="66dp"
-                android:layout_marginBottom="15dp"
+                android:layout_height="55dp"
                 android:orientation="horizontal"
                 android:layout_gravity="center">
 
                 <EditText
                     android:id="@+id/detail_contribute_amount"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Amount"
-                    android:inputType="numberDecimal"/>
+                    android:inputType="numberDecimal"
+                    android:selectAllOnFocus="false" />
 
                 <Button
                     android:id="@+id/detail_contri_button"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginRight="70dp"
                     android:text="@string/contri_button" />
 
             </LinearLayout>
