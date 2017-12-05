@@ -79,11 +79,6 @@ public class EventViewActivity extends AppCompatActivity {
             }
         }
 
-        if (savedInstanceState != null) {
-            hostingEventArrayList = savedInstanceState.getStringArrayList("host_list");
-            attendingEventArrayList = savedInstanceState.getStringArrayList("attend_list");
-        }
-
         createEventButton = (Button) findViewById(R.id.createButton);
 
 
@@ -212,6 +207,8 @@ public class EventViewActivity extends AppCompatActivity {
 
         hostingEventArrayList = new ArrayList<String>();
         attendingEventArrayList = new ArrayList<String>();
+        hostingEventArrayListIds = new ArrayList<String>();
+        attendingEventArrayListIds = new ArrayList<String>();
 
     }
 
