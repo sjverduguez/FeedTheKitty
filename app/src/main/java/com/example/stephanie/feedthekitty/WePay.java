@@ -7,6 +7,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Log;
+import android.view.WindowManager;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -17,14 +20,18 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -243,6 +250,7 @@ public class WePay {
 
                     SharedPreferences.Editor editor = sharedPref.edit();
                     editor.putString("pending_checkout", checkout_id);
+                    editor.putString("pending_checkout_account", Integer.toString(accountID));
                     editor.commit();
 
                     Intent i = new Intent(Intent.ACTION_VIEW);
@@ -346,14 +354,35 @@ public class WePay {
         queue.add(sr);
     }
 
-    public static void updatePendingCheckouts(Context context) {
+    public static void updatePendingCheckouts(final Context context) {
         SharedPreferences sharedPref = context.getSharedPreferences("com.example.stephanie.FeedTheKitty", Context.MODE_MULTI_PROCESS);
-        String pendingCheckouts = sharedPref.getString("pending_checkout", null);
-        String accessToken = sharedPref.getString("AccessToken", null);
+        final String pendingCheckouts = sharedPref.getString("pending_checkout", null);
+        String pendingCheckoutAccount = sharedPref.getString("pending_checkout_account", null);
 
-        if (pendingCheckouts != null) {
-            getCheckoutStatus(context, Integer.parseInt(pendingCheckouts), accessToken);
+        if (pendingCheckouts != null && pendingCheckoutAccount != null) {
+            DatabaseReference events = FirebaseDatabase.getInstance()
+                    .getReferenceFromUrl("https://feedthekitty-a803d.firebaseio.com");
+            DatabaseReference eventDetails = events.child(pendingCheckoutAccount);
+
+
+            eventDetails.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+
+                    String accessToken = dataSnapshot.child("AccessToken").getValue().toString();
+                    getCheckoutStatus(context, Integer.parseInt(pendingCheckouts), accessToken);
+
+                }
+
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
         }
+
     }
 
 
