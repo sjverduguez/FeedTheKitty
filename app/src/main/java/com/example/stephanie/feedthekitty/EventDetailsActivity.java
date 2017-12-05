@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -74,6 +75,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                 .getReferenceFromUrl("https://feedthekitty-a803d.firebaseio.com");
         DatabaseReference eventDetails = events.child(event_id);
 
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         eventDetails.addValueEventListener(new ValueEventListener() {
             @Override
