@@ -128,7 +128,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                 if (EventViewActivity.attendingEventArrayListIds.contains(event_id)) {
                     Toast.makeText(getApplicationContext(), "You are already attending " + event, Toast.LENGTH_SHORT).show();
                 } else {
-                    EventViewActivity.addAttendingEvent(event_id);
+                    EventViewActivity.addInitialAttendingEvent(event_id);
                     Toast.makeText(getApplicationContext(), "Attending: " + event, Toast.LENGTH_SHORT).show();
                 }
             }

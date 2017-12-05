@@ -190,7 +190,7 @@ public class WePay {
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
 
-                    EventViewActivity.addHostingEvent(account_id);
+                    EventViewActivity.addInitialHostingEvent(account_id);
 
 
                 } catch (JSONException e) {

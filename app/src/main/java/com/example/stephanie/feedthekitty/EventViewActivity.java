@@ -58,7 +58,11 @@ public class EventViewActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_view_events);
 
+        attendingListView = (ListView) findViewById(R.id.attendingList);
+        hostingListView = (ListView) findViewById(R.id.hostingList);
 
+        hostingAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_item, hostingEventArrayList);
+        attendingAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_item, attendingEventArrayList);
 
         Set<String> tempSet = prefs.getStringSet("host_set", null);
         if (tempSet != null) {
@@ -71,6 +75,7 @@ public class EventViewActivity extends AppCompatActivity {
         if (tempSet != null) {
             for (String eventId:  tempSet) {
                 addInitialAttendingEvent(eventId);
+
             }
         }
 
@@ -80,11 +85,7 @@ public class EventViewActivity extends AppCompatActivity {
         }
 
         createEventButton = (Button) findViewById(R.id.createButton);
-        attendingListView = (ListView) findViewById(R.id.attendingList);
-        hostingListView = (ListView) findViewById(R.id.hostingList);
 
-        hostingAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_item, hostingEventArrayList);
-        attendingAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_item, attendingEventArrayList);
 
         hostingListView.setAdapter(hostingAdapter);
         attendingListView.setAdapter(attendingAdapter);
@@ -132,6 +133,7 @@ public class EventViewActivity extends AppCompatActivity {
                    String name = dataSnapshot.child("Name").getValue().toString();
                    hostingEventArrayList.add(name);
                    hostingEventArrayListIds.add(eventId);
+                   hostingAdapter.notifyDataSetChanged();
                }
 
                @Override
@@ -153,6 +155,7 @@ public class EventViewActivity extends AppCompatActivity {
                 String name = dataSnapshot.child("Name").getValue().toString();
                 attendingEventArrayList.add(name);
                 attendingEventArrayListIds.add(eventId);
+                attendingAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -163,17 +166,6 @@ public class EventViewActivity extends AppCompatActivity {
 
     }
 
-    public static void addHostingEvent(String eventId) {
-        Log.i("EventView", "Adding to hosting events");
-        addInitialHostingEvent(eventId);
-        hostingAdapter.notifyDataSetChanged();
-    }
-
-    public static void addAttendingEvent(String eventId) {
-        addInitialAttendingEvent(eventId);
-        attendingAdapter.notifyDataSetChanged();
-    }
-
     @Override
     public void onRestart() {
         super.onRestart();
@@ -182,14 +174,14 @@ public class EventViewActivity extends AppCompatActivity {
         Set<String> tempSet = prefs.getStringSet("host_set", null);
         if (tempSet != null) {
             for (String eventId:  tempSet) {
-                addHostingEvent(eventId);
+                addInitialHostingEvent(eventId);
             }
         }
 
         tempSet = prefs.getStringSet("attend_set", null);
         if (tempSet != null) {
             for (String eventId:  tempSet) {
-                addAttendingEvent(eventId);
+                addInitialAttendingEvent(eventId);
             }
         }
 
