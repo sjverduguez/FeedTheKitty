@@ -20,9 +20,11 @@ public class MainActivity extends AppCompatActivity {
         if (sharedPreferences.contains("AccessToken")){
             Intent intent = new Intent(MainActivity.this, EventViewActivity.class);
             startActivity(intent);
+            finish();
         } else {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
+            finish();
         }
     }
 

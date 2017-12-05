@@ -12,11 +12,19 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -111,27 +119,58 @@ public class EventViewActivity extends AppCompatActivity {
     }
 
 
-    public static void addInitialHostingEvent(String eventId) {
+    public static void addInitialHostingEvent(final String eventId) {
         Log.i("EventView", "Adding to hosting events");
-        hostingEventArrayListIds.add(eventId);
-        hostingEventArrayList.add(eventId);
+        DatabaseReference events = FirebaseDatabase.getInstance()
+                .getReferenceFromUrl("https://feedthekitty-a803d.firebaseio.com");
+        DatabaseReference eventDetails = events.child(eventId);
+
+
+        eventDetails.addValueEventListener(new ValueEventListener() {
+               @Override
+               public void onDataChange(DataSnapshot dataSnapshot) {
+                   String name = dataSnapshot.child("Name").getValue().toString();
+                   hostingEventArrayList.add(name);
+                   hostingEventArrayListIds.add(eventId);
+               }
+
+               @Override
+                public void onCancelled(DatabaseError error) {
+
+               }
+           });
     }
 
-    public static void addInitialAttendingEvent(String eventId) {
-        attendingEventArrayListIds.add(eventId);
-        attendingEventArrayList.add(eventId);
+    public static void addInitialAttendingEvent(final String eventId) {
+        DatabaseReference events = FirebaseDatabase.getInstance()
+                .getReferenceFromUrl("https://feedthekitty-a803d.firebaseio.com");
+        DatabaseReference eventDetails = events.child(eventId);
+
+
+        eventDetails.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String name = dataSnapshot.child("Name").getValue().toString();
+                attendingEventArrayList.add(name);
+                attendingEventArrayListIds.add(eventId);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+
+            }
+        });
+
     }
 
     public static void addHostingEvent(String eventId) {
         Log.i("EventView", "Adding to hosting events");
-        hostingEventArrayListIds.add(eventId);
-        hostingEventArrayList.add(eventId);
+        addInitialHostingEvent(eventId);
         hostingAdapter.notifyDataSetChanged();
     }
 
     public static void addAttendingEvent(String eventId) {
-        attendingEventArrayListIds.add(eventId);
-        attendingEventArrayList.add(eventId);
+        addInitialAttendingEvent(eventId);
         attendingAdapter.notifyDataSetChanged();
     }
 
@@ -173,8 +212,8 @@ public class EventViewActivity extends AppCompatActivity {
         Set<String> host_set = new HashSet<String>();
         Set<String> attend_set = new HashSet<String>();
 
-        host_set.addAll(hostingEventArrayList);
-        attend_set.addAll(attendingEventArrayList);
+        host_set.addAll(hostingEventArrayListIds);
+        attend_set.addAll(attendingEventArrayListIds);
         editor_stp.putStringSet("host_set", host_set);
         editor_stp.putStringSet("attend_set", attend_set);
         editor_stp.commit();
@@ -187,8 +226,8 @@ public class EventViewActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outstate){
         super.onSaveInstanceState(outstate);
-        outstate.putStringArrayList("host_list", hostingEventArrayList);
-        outstate.putStringArrayList("attend_list", attendingEventArrayList);
+        outstate.putStringArrayList("host_list", hostingEventArrayListIds);
+        outstate.putStringArrayList("attend_list", attendingEventArrayListIds);
     }
 
 }

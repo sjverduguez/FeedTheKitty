@@ -125,8 +125,12 @@ public class EventDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String event = eventName.getText().toString();
-                EventViewActivity.addAttendingEvent(event_id);
-                Toast.makeText(getApplicationContext(), "Attending: " + event, Toast.LENGTH_SHORT).show();
+                if (EventViewActivity.attendingEventArrayListIds.contains(event_id)) {
+                    Toast.makeText(getApplicationContext(), "You are already attending " + event, Toast.LENGTH_SHORT).show();
+                } else {
+                    EventViewActivity.addAttendingEvent(event_id);
+                    Toast.makeText(getApplicationContext(), "Attending: " + event, Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -141,6 +145,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                 }
                 else {
                     WePay.checkout(getApplicationContext(), Integer.parseInt(event_id), name, Float.parseFloat(contributeAmount.getText().toString()), accessToken);
+                    contributeAmount.setText("");
                 }
             }
         });
